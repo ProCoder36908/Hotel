@@ -199,7 +199,6 @@
     <div class="title-screen" id="title-screen">
         <h1>The Hotel</h1>
         <button id="start-btn">Start Adventure</button>
-        <button id="credits-btn">Credits</button>
     </div>
     <div class="container" id="game-container">
         <div class="header">
@@ -247,8 +246,7 @@
             journal: {
                 text: "The journal hints at a missing guest and a hidden lounge. A brass key slips from its pages.",
                 choices: [
-                    { text: "Take the key", nextScene: "room_203_key", set: { hasKey: true } },
-                    { text: "Return to the room", nextScene: "room_203" }
+                    { text: "Take the key", nextScene: "room_203_key", set: { hasKey: true } }
                 ],
                 ambient: "lobby"
             },
@@ -263,7 +261,7 @@
             key_details: {
                 text: "The key's etchings form a map of hidden passages. A secret awaits discovery.",
                 choices: [
-                    { text: "Go to the hallway", nextScene: "hallway" }
+                    { text: "Proceed to the hallway", nextScene: "hallway" }
                 ],
                 ambient: "lobby"
             },
@@ -275,8 +273,8 @@
                     { text: "Head to the elevator", nextScene: "elevator" },
                     { text: "Unlock a hidden door", nextScene: "secret_lounge", requires: { hasKey: true } },
                     { text: "Enter Room 209", nextScene: "room_209" },
-                    { text: "Go to the lobby", nextScene: "lobby" },
-                    { text: "Visit the library", nextScene: "library" }
+                    { text: "Visit the lobby", nextScene: "lobby" },
+                    { text: "Explore the library", nextScene: "library" }
                 ],
                 ambient: "lobby"
             },
@@ -284,24 +282,21 @@
                 text: "The library smells of aged paper. Shelves tower with dusty tomes. The librarian eyes you curiously.",
                 choices: [
                     { text: "Browse old books", nextScene: "library_books" },
-                    { text: "Talk to the librarian", nextScene: "library_librarian", set: { helpedLibrarian: true } },
-                    { text: "Return to the hallway", nextScene: "hallway" }
+                    { text: "Talk to the librarian", nextScene: "library_librarian", set: { helpedLibrarian: true } }
                 ],
                 ambient: "lobby"
             },
             library_books: {
                 text: "You find a story about a lost guest, vanished in the hotel’s secret lounge decades ago.",
                 choices: [
-                    { text: "Return to the library", nextScene: "library" },
-                    { text: "Go to the hallway", nextScene: "hallway" }
+                    { text: "Continue to the hallway", nextScene: "hallway" }
                 ],
                 ambient: "lobby"
             },
             library_librarian: {
                 text: "The librarian whispers, 'The safe in the lounge holds the truth. Use code 1923.' She hands you a slip of paper.",
                 choices: [
-                    { text: "Return to the library", nextScene: "library" },
-                    { text: "Go to the hallway", nextScene: "hallway" }
+                    { text: "Head to the hallway", nextScene: "hallway" }
                 ],
                 ambient: "lobby"
             },
@@ -319,8 +314,7 @@
             desk_girl: {
                 text: "The girl at the desk whispers, 'Avoid the rooftop unless you know the way.' Her eyes dart nervously.",
                 choices: [
-                    { text: "Return to the lobby", nextScene: "lobby" },
-                    { text: "Go to the hallway", nextScene: "hallway" }
+                    { text: "Proceed to the hallway", nextScene: "hallway" }
                 ],
                 ambient: "lobby"
             },
@@ -328,24 +322,21 @@
                 text: "The kitchen smells of spices. The chef, frantic, begs for help with a delivery. A note lies in the corner.",
                 choices: [
                     { text: "Help the chef", nextScene: "kitchen_help", set: { helpedChef: true } },
-                    { text: "Read the note", nextScene: "kitchen_note", set: { foundNote: true } },
-                    { text: "Return to the lobby", nextScene: "lobby" }
+                    { text: "Read the note", nextScene: "kitchen_note", set: { foundNote: true } }
                 ],
                 ambient: "lobby"
             },
             kitchen_help: {
                 text: "You help the chef, who slips you a map fragment. 'This leads to the hidden floor,' he says.",
                 choices: [
-                    { text: "Take the map fragment", nextScene: "kitchen", set: { hasMap: true } },
-                    { text: "Return to the lobby", nextScene: "lobby" }
+                    { text: "Take the map fragment", nextScene: "kitchen", set: { hasMap: true } }
                 ],
                 ambient: "lobby"
             },
             kitchen_note: {
                 text: "The note warns: 'The manager hides the truth on the hidden floor.' You pocket it.",
                 choices: [
-                    { text: "Return to the kitchen", nextScene: "kitchen" },
-                    { text: "Go to the lobby", nextScene: "lobby" }
+                    { text: "Continue to the lobby", nextScene: "lobby" }
                 ],
                 ambient: "lobby"
             },
@@ -355,14 +346,14 @@
                     : "Room 209 is cluttered, a locked chest in the corner. You need a key to open it.",
                 choices: [
                     { text: "Open the chest", nextScene: "chest", requires: { hasKey: true }, set: { hasMap: true } },
-                    { text: "Return to the hallway", nextScene: "hallway" }
+                    { text: "Proceed to the hallway", nextScene: "hallway" }
                 ],
                 ambient: "lobby"
             },
             chest: {
                 text: "The chest reveals a map of the hotel’s hidden floor, marked with a warning about the rooftop.",
                 choices: [
-                    { text: "Return to the hallway", nextScene: "hallway" }
+                    { text: "Continue to the hallway", nextScene: "hallway" }
                 ],
                 ambient: "lobby"
             },
@@ -372,8 +363,7 @@
                     : "The elevator’s panel is dusty, with only a rooftop button working.",
                 choices: [
                     { text: "Go to the rooftop", nextScene: "rooftop" },
-                    { text: "Go to the hidden floor", nextScene: "hidden_floor", requires: { hasMap: true } },
-                    { text: "Return to the hallway", nextScene: "hallway" }
+                    { text: "Go to the hidden floor", nextScene: "hidden_floor", requires: { hasMap: true } }
                 ],
                 ambient: "lobby"
             },
@@ -383,8 +373,7 @@
                     : "The rooftop is windswept, city lights sparkling below. A figure watches from the shadows.",
                 choices: [
                     { text: "Approach the figure", nextScene: "shadow_ending", requires: { talkedToGirl: false } },
-                    { text: "Leave safely", nextScene: "tourist_ending", requires: { talkedToGirl: true } },
-                    { text: "Return to the elevator", nextScene: "elevator" }
+                    { text: "Leave safely", nextScene: "tourist_ending", requires: { talkedToGirl: true } }
                 ],
                 ambient: "rooftop"
             },
@@ -395,8 +384,7 @@
                 choices: [
                     { text: "Become the Archivist", nextScene: "archivist_ending", requires: { helpedLibrarian: true, hasKey: true } },
                     { text: "Use code 1923", nextScene: "archive_ending", requires: { helpedLibrarian: true, hasKey: true } },
-                    { text: "Open the safe", nextScene: "manager_ending", requires: { hasKey: true, foundNote: true } },
-                    { text: "Return to the hallway", nextScene: "hallway" }
+                    { text: "Open the safe", nextScene: "manager_ending", requires: { hasKey: true, foundNote: true } }
                 ],
                 ambient: "lobby"
             },
@@ -404,42 +392,48 @@
                 text: "The hidden floor is eerie, walls lined with old portraits. A door marked 'Truth' looms ahead, and a narrow ladder leads upward.",
                 choices: [
                     { text: "Enter the door", nextScene: "truth_ending", requires: { foundNote: true } },
-                    { text: "Climb to the attic", nextScene: "attic" },
-                    { text: "Return to the elevator", nextScene: "elevator" }
+                    { text: "Climb to the attic", nextScene: "attic" }
                 ],
                 ambient: "lobby"
             },
             attic: {
-                text: "You climb into the dusty attic. Shadows stretch long across broken crates. Three items lie before you: a candle, a photo, and an old watch.",
+                text: "You climb into the dusty attic. Shadows stretch long across broken crates. Three items lie before you: a candle, a photo, and an old watch. A pile of crates looks unstable but tempting to search.",
                 choices: [
                     { text: "Take the candle", nextScene: "candle_scene", set: { hasCandle: true } },
                     { text: "Examine the photo", nextScene: "photo_scene", set: { sawPhoto: true } },
-                    { text: "Pick up the watch", nextScene: "watch_scene", set: { hasWatch: true } }
+                    { text: "Pick up the watch", nextScene: "watch_scene", set: { hasWatch: true } },
+                    { text: "Search the crates", nextScene: "attic_trap_ending" }
                 ],
                 ambient: "lobby"
             },
             candle_scene: {
                 text: "The candle is ancient, its wax etched with strange symbols. It feels warm, as if recently lit.",
                 choices: [
-                    { text: "Return to the attic", nextScene: "attic" },
-                    { text: "Go back to the hidden floor", nextScene: "hidden_floor" }
+                    { text: "Proceed to the hidden floor", nextScene: "hidden_floor" },
+                    { text: "Enter the secret lounge", nextScene: "secret_lounge", requires: { hasKey: true } }
                 ],
                 ambient: "lobby"
             },
             photo_scene: {
                 text: "The photo shows a group of guests from decades ago, their faces blurred except for one who stares directly at you.",
                 choices: [
-                    { text: "Return to the attic", nextScene: "attic" },
-                    { text: "Go back to the hidden floor", nextScene: "hidden_floor" }
+                    { text: "Proceed to the hidden floor", nextScene: "hidden_floor" },
+                    { text: "Enter the secret lounge", nextScene: "secret_lounge", requires: { hasKey: true } }
                 ],
                 ambient: "lobby"
             },
             watch_scene: {
                 text: "The watch is stopped at midnight, its hands frozen. An inscription reads: 'Time guards the truth.'",
                 choices: [
-                    { text: "Return to the attic", nextScene: "attic" },
-                    { text: "Go back to the hidden floor", nextScene: "hidden_floor" }
+                    { text: "Proceed to the hidden floor", nextScene: "hidden_floor" },
+                    { text: "Enter the secret lounge", nextScene: "secret_lounge", requires: { hasKey: true } }
                 ],
+                ambient: "lobby"
+            },
+            attic_trap_ending: {
+                text: "The crates collapse under your weight, trapping you in the attic’s darkness. No one hears your calls. THE END.",
+                ending: true,
+                choices: [],
                 ambient: "lobby"
             },
             tourist_ending: {
@@ -540,7 +534,7 @@
                 return;
             }
 
-            // Update narration
+            // Update narration text with fade-in
             const narration = document.getElementById('narration');
             narration.classList.remove('visible');
             setTimeout(() => {
@@ -549,16 +543,25 @@
                 narration.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 50);
 
-            // Update choices
             const choicesContainer = document.getElementById('choices');
-            choicesContainer.innerHTML = ''; // Clear previous choices
+
             if (scene.ending) {
-                // Disable all buttons for ending scenes
-                const buttons = document.querySelectorAll('.choice-btn');
-                buttons.forEach(button => button.disabled = true);
+                // For endings, clear choices and show only restart
+                choicesContainer.innerHTML = '';
+                const restartBtn = document.createElement('button');
+                restartBtn.textContent = "Restart Game";
+                restartBtn.className = 'choice-btn visible';
+                restartBtn.style.backgroundColor = '#d4af37'; // Gold color
+                restartBtn.style.color = '#2c1a1a';
+                restartBtn.addEventListener('click', () => {
+                    restartGame();
+                });
+                choicesContainer.appendChild(restartBtn);
             } else {
+                // Normal scenes show choices that are valid
+                choicesContainer.innerHTML = '';
                 scene.choices.forEach((choice, index) => {
-                    // Check if choice requirements are met
+                    // Check requirements
                     let requirementsMet = true;
                     if (choice.requires) {
                         requirementsMet = Object.keys(choice.requires).every(
@@ -571,24 +574,21 @@
                         button.className = 'choice-btn';
                         button.textContent = choice.text;
                         button.addEventListener('click', () => {
-                            initializeAudio(); // Initialize audio on first interaction
-                            // Apply state changes if any
+                            initializeAudio();
                             if (choice.set) {
                                 Object.assign(gameState, choice.set);
-                                saveGameState(); // Save state after changes
+                                saveGameState();
                             }
                             showScene(choice.nextScene);
                         });
                         choicesContainer.appendChild(button);
-                        // Trigger fade-in for buttons
                         setTimeout(() => {
-                            button.classList.add('visible');
+                            button.className = 'choice-btn visible';
                         }, 100 * (index + 1));
                     }
                 });
             }
 
-            // Play ambient sound if audio is initialized
             playAmbient(id);
         }
 
@@ -613,13 +613,8 @@
             showTitleScreen(); // Show title screen instead of starting game
         }
 
-        function showCredits() {
-            alert("Credits:\n- Story and Design: xAI Team\n- Development: Grok\n- Audio: Pixabay\nThank you for playing The Hotel!");
-        }
-
         // Add event listeners
         document.getElementById('start-btn').addEventListener('click', startGame);
-        document.getElementById('credits-btn').addEventListener('click', showCredits);
         document.getElementById('restart-btn').addEventListener('click', restartGame);
         document.getElementById('mute-btn').addEventListener('click', toggleMute);
 
