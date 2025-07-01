@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Hotel</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Georgia', serif;
+            background-color: #fff8e7; /* Cream background */
+            color: #2c1a1a; /* Dark brown text */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+        }
+
+        .title-screen {
+            text-align: center;
+            background: linear-gradient(to bottom, #8b1e2d, #6b1722); /* Velvet red gradient */
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #d4af37; /* Gold text */
+        }
+
+        .title-screen h1 {
+            font-size: 4em;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .title-screen button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-family: 'Georgia', serif;
+            background-color: #d4af37; /* Gold */
+            color: #2c1a1a; /* Dark brown text */
+            border: 2px solid #fff8e7; /* Cream border */
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .title-screen button:hover {
+            background-color: #e6c14b; /* Lighter gold */
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .title-screen button:active {
+            transform: scale(1);
+            box-shadow: none;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: none; /* Hidden until game starts */
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(to bottom, #fff8e7, #f8e6c2);
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #8b1e2d; /* Velvet red */
+            color: #d4af37; /* Gold text */
+            text-align: center;
+            padding: 20px 0;
+            font-size: 2.5em;
+            font-weight: bold;
+            border-bottom: 4px solid #d4af37;
+            position: relative;
+            z-index: 10;
+        }
+
+        .controls {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .restart-btn, .mute-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            font-family: 'Georgia', serif;
+            background-color: #d4af37; /* Gold */
+            color: #2c1a1a; /* Dark brown text */
+            border: 2px solid #8b1e2d; /* Velvet red border */
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover, .mute-btn:hover {
+            background-color: #e6c14b; /* Lighter gold */
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .restart-btn:active, .mute-btn:active {
+            transform: translateY(-50%) scale(1);
+            box-shadow: none;
+        }
+
+        .narration {
+            flex: 1;
+            width: 80%;
+            max-width: 800px;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #fffaf0; /* Light cream */
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            font-size: 1.2em;
+            line-height: 1.6;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .narration.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .choices {
+            width: 80%;
+            max-width: 800px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .choice-btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-family: 'Georgia', serif;
+            background-color: #8b1e2d; /* Velvet red */
+            color: #fff8e7; /* Cream text */
+            border: 2px solid #d4af37; /* Gold border */
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .choice-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .choice-btn:nth-child(1) { transition-delay: 0.1s; }
+        .choice-btn:nth-child(2) { transition-delay: 0.2s; }
+        .choice-btn:nth-child(3) { transition-delay: 0.3s; }
+        .choice-btn:nth-child(4) { transition-delay: 0.4s; }
+        .choice-btn:nth-child(5) { transition-delay: 0.5s; }
+
+        .choice-btn:hover {
+            background-color: #a12335; /* Darker velvet red */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .choice-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .choice-btn:disabled {
+            background-color: #6b1722; /* Darker, muted red */
+            color: #ccc;
+            border-color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="title-screen" id="title-screen">
+        <h1>The Hotel</h1>
+        <button id="start-btn">Start Adventure</button>
+        <button id="credits-btn">Credits</button>
+    </div>
+    <div class="container" id="game-container">
+        <div class="header">
+            The Hotel
+            <div class="controls">
+                <button class="restart-btn" id="restart-btn">Restart</button>
+                <button class="mute-btn" id="mute-btn">Mute</button>
+            </div>
+        </div>
+        <div class="narration" id="narration">
+            Welcome to The Hotel. Your story begins here...
+        </div>
+        <div class="choices" id="choices">
+            <!-- Choices will be dynamically inserted here -->
+        </div>
+    </div>
+    <audio id="ambient-lobby" loop preload="auto" src="https://cdn.pixabay.com/download/audio/2023/08/07/audio_4f6f6b6b1f.mp3?filename=ambient-background-121081.mp3"></audio>
+    <audio id="ambient-rooftop" loop preload="auto" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_3b1a6b6b1f.mp3?filename=wind-143666.mp3"></audio>
+    <script>
+        let gameState = {
+            hasKey: false,
+            hasMap: false,
+            helpedChef: false,
+            talkedToGirl: false,
+            foundNote: false,
+            helpedLibrarian: false,
+            hasCandle: false,
+            sawPhoto: false,
+            hasWatch: false
+        };
+
+        const initialState = { ...gameState }; // Store initial state for reset
+        let isAudioInitialized = false; // Track if audio has been initialized
+        let isMuted = false;
+
+        const scenes = {
+            room_203: {
+                text: "Room 203 is dimly lit, velvet curtains heavy with dust. A journal sits on the desk, and a creaky door beckons.",
+                choices: [
+                    { text: "Read the journal", nextScene: "journal", set: { hasKey: true } },
+                    { text: "Open the door", nextScene: "hallway" }
+                ],
+                ambient: "lobby"
+            },
+            journal: {
+                text: "The journal hints at a missing guest and a hidden lounge. A brass key slips from its pages.",
+                choices: [
+                    { text: "Take the key", nextScene: "room_203_key", set: { hasKey: true } },
+                    { text: "Return to the room", nextScene: "room_203" }
+                ],
+                ambient: "lobby"
+            },
+            room_203_key: {
+                text: "The key feels cold, etched with faint lines. The room's air grows heavy, as if watching you.",
+                choices: [
+                    { text: "Examine the key", nextScene: "key_details", set: { hasMap: true } },
+                    { text: "Open the door", nextScene: "hallway" }
+                ],
+                ambient: "lobby"
+            },
+            key_details: {
+                text: "The key's etchings form a map of hidden passages. A secret awaits discovery.",
+                choices: [
+                    { text: "Go to the hallway", nextScene: "hallway" }
+                ],
+                ambient: "lobby"
+            },
+            hallway: {
+                text: () => gameState.talkedToGirl 
+                    ? "The hallway stretches on, doors whispering secrets. The elevator hums, and a girl’s warning echoes in your mind."
+                    : "The hallway stretches endlessly, doors numbered in gold. A faint hum comes from the elevator.",
+                choices: [
+                    { text: "Head to the elevator", nextScene: "elevator" },
+                    { text: "Unlock a hidden door", nextScene: "secret_lounge", requires: { hasKey: true } },
+                    { text: "Enter Room 209", nextScene: "room_209" },
+                    { text: "Go to the lobby", nextScene: "lobby" },
+                    { text: "Visit the library", nextScene: "library" }
+                ],
+                ambient: "lobby"
+            },
+            library: {
+                text: "The library smells of aged paper. Shelves tower with dusty tomes. The librarian eyes you curiously.",
+                choices: [
+                    { text: "Browse old books", nextScene: "library_books" },
+                    { text: "Talk to the librarian", nextScene: "library_librarian", set: { helpedLibrarian: true } },
+                    { text: "Return to the hallway", nextScene: "hallway" }
+                ],
+                ambient: "lobby"
+            },
+            library_books: {
+                text: "You find a story about a lost guest, vanished in the hotel’s secret lounge decades ago.",
+                choices: [
+                    { text: "Return to the library", nextScene: "library" },
+                    { text: "Go to the hallway", nextScene: "hallway" }
+                ],
+                ambient: "lobby"
+            },
+            library_librarian: {
+                text: "The librarian whispers, 'The safe in the lounge holds the truth. Use code 1923.' She hands you a slip of paper.",
+                choices: [
+                    { text: "Return to the library", nextScene: "library" },
+                    { text: "Go to the hallway", nextScene: "hallway" }
+                ],
+                ambient: "lobby"
+            },
+            lobby: {
+                text: () => gameState.foundNote 
+                    ? "The lobby buzzes with tourists. The note’s warning about the manager makes you wary of the front desk."
+                    : "The lobby is alive with tourists. The front desk shines, but something feels off.",
+                choices: [
+                    { text: "Talk to the girl at the desk", nextScene: "desk_girl", set: { talkedToGirl: true } },
+                    { text: "Take the elevator", nextScene: "elevator" },
+                    { text: "Head to the kitchen", nextScene: "kitchen" }
+                ],
+                ambient: "lobby"
+            },
+            desk_girl: {
+                text: "The girl at the desk whispers, 'Avoid the rooftop unless you know the way.' Her eyes dart nervously.",
+                choices: [
+                    { text: "Return to the lobby", nextScene: "lobby" },
+                    { text: "Go to the hallway", nextScene: "hallway" }
+                ],
+                ambient: "lobby"
+            },
+            kitchen: {
+                text: "The kitchen smells of spices. The chef, frantic, begs for help with a delivery. A note lies in the corner.",
+                choices: [
+                    { text: "Help the chef", nextScene: "kitchen_help", set: { helpedChef: true } },
+                    { text: "Read the note", nextScene: "kitchen_note", set: { foundNote: true } },
+                    { text: "Return to the lobby", nextScene: "lobby" }
+                ],
+                ambient: "lobby"
+            },
+            kitchen_help: {
+                text: "You help the chef, who slips you a map fragment. 'This leads to the hidden floor,' he says.",
+                choices: [
+                    { text: "Take the map fragment", nextScene: "kitchen", set: { hasMap: true } },
+                    { text: "Return to the lobby", nextScene: "lobby" }
+                ],
+                ambient: "lobby"
+            },
+            kitchen_note: {
+                text: "The note warns: 'The manager hides the truth on the hidden floor.' You pocket it.",
+                choices: [
+                    { text: "Return to the kitchen", nextScene: "kitchen" },
+                    { text: "Go to the lobby", nextScene: "lobby" }
+                ],
+                ambient: "lobby"
+            },
+            room_209: {
+                text: () => gameState.hasKey 
+                    ? "Room 209 is cluttered, a locked chest in the corner. The key fits perfectly."
+                    : "Room 209 is cluttered, a locked chest in the corner. You need a key to open it.",
+                choices: [
+                    { text: "Open the chest", nextScene: "chest", requires: { hasKey: true }, set: { hasMap: true } },
+                    { text: "Return to the hallway", nextScene: "hallway" }
+                ],
+                ambient: "lobby"
+            },
+            chest: {
+                text: "The chest reveals a map of the hotel’s hidden floor, marked with a warning about the rooftop.",
+                choices: [
+                    { text: "Return to the hallway", nextScene: "hallway" }
+                ],
+                ambient: "lobby"
+            },
+            elevator: {
+                text: () => gameState.hasMap 
+                    ? "The elevator’s panel has a hidden button labeled 'HF,' glowing faintly."
+                    : "The elevator’s panel is dusty, with only a rooftop button working.",
+                choices: [
+                    { text: "Go to the rooftop", nextScene: "rooftop" },
+                    { text: "Go to the hidden floor", nextScene: "hidden_floor", requires: { hasMap: true } },
+                    { text: "Return to the hallway", nextScene: "hallway" }
+                ],
+                ambient: "lobby"
+            },
+            rooftop: {
+                text: () => gameState.talkedToGirl 
+                    ? "The rooftop is windswept, city lights below. The girl’s warning makes you hesitate."
+                    : "The rooftop is windswept, city lights sparkling below. A figure watches from the shadows.",
+                choices: [
+                    { text: "Approach the figure", nextScene: "shadow_ending", requires: { talkedToGirl: false } },
+                    { text: "Leave safely", nextScene: "tourist_ending", requires: { talkedToGirl: true } },
+                    { text: "Return to the elevator", nextScene: "elevator" }
+                ],
+                ambient: "rooftop"
+            },
+            secret_lounge: {
+                text: () => gameState.helpedLibrarian
+                    ? "The secret lounge is opulent, velvet sofas gleaming. The safe’s dial awaits code 1923."
+                    : "The secret lounge is opulent, with velvet sofas and a locked safe. A note mentions the manager’s betrayal.",
+                choices: [
+                    { text: "Become the Archivist", nextScene: "archivist_ending", requires: { helpedLibrarian: true, hasKey: true } },
+                    { text: "Use code 1923", nextScene: "archive_ending", requires: { helpedLibrarian: true, hasKey: true } },
+                    { text: "Open the safe", nextScene: "manager_ending", requires: { hasKey: true, foundNote: true } },
+                    { text: "Return to the hallway", nextScene: "hallway" }
+                ],
+                ambient: "lobby"
+            },
+            hidden_floor: {
+                text: "The hidden floor is eerie, walls lined with old portraits. A door marked 'Truth' looms ahead, and a narrow ladder leads upward.",
+                choices: [
+                    { text: "Enter the door", nextScene: "truth_ending", requires: { foundNote: true } },
+                    { text: "Climb to the attic", nextScene: "attic" },
+                    { text: "Return to the elevator", nextScene: "elevator" }
+                ],
+                ambient: "lobby"
+            },
+            attic: {
+                text: "You climb into the dusty attic. Shadows stretch long across broken crates. Three items lie before you: a candle, a photo, and an old watch.",
+                choices: [
+                    { text: "Take the candle", nextScene: "candle_scene", set: { hasCandle: true } },
+                    { text: "Examine the photo", nextScene: "photo_scene", set: { sawPhoto: true } },
+                    { text: "Pick up the watch", nextScene: "watch_scene", set: { hasWatch: true } }
+                ],
+                ambient: "lobby"
+            },
+            candle_scene: {
+                text: "The candle is ancient, its wax etched with strange symbols. It feels warm, as if recently lit.",
+                choices: [
+                    { text: "Return to the attic", nextScene: "attic" },
+                    { text: "Go back to the hidden floor", nextScene: "hidden_floor" }
+                ],
+                ambient: "lobby"
+            },
+            photo_scene: {
+                text: "The photo shows a group of guests from decades ago, their faces blurred except for one who stares directly at you.",
+                choices: [
+                    { text: "Return to the attic", nextScene: "attic" },
+                    { text: "Go back to the hidden floor", nextScene: "hidden_floor" }
+                ],
+                ambient: "lobby"
+            },
+            watch_scene: {
+                text: "The watch is stopped at midnight, its hands frozen. An inscription reads: 'Time guards the truth.'",
+                choices: [
+                    { text: "Return to the attic", nextScene: "attic" },
+                    { text: "Go back to the hidden floor", nextScene: "hidden_floor" }
+                ],
+                ambient: "lobby"
+            },
+            tourist_ending: {
+                text: "You blend into the crowd of tourists in the lobby and slip out into the night. Safe, but unaware. THE END.",
+                ending: true,
+                choices: [],
+                ambient: "lobby"
+            },
+            shadow_ending: {
+                text: "The figure on the rooftop smiles coldly. 'You shouldn’t have come.' You vanish into the night. THE END.",
+                ending: true,
+                choices: [],
+                ambient: "rooftop"
+            },
+            manager_ending: {
+                text: "The safe reveals the manager’s crimes. You expose them to the world and escape. THE END.",
+                ending: true,
+                choices: [],
+                ambient: "lobby"
+            },
+            truth_ending: {
+                text: "The door reveals the hotel’s dark history. You uncover its secrets and find peace. THE END.",
+                ending: true,
+                choices: [],
+                ambient: "lobby"
+            },
+            archive_ending: {
+                text: "The safe opens to an archive of lost guest records. You publish their stories, freeing their memory. THE END.",
+                ending: true,
+                choices: [],
+                ambient: "lobby"
+            },
+            archivist_ending: {
+                text: "The safe reveals the hotel was a secret archive of hidden stories. You choose to stay, becoming the new keeper of its secrets. THE END.",
+                ending: true,
+                choices: [],
+                ambient: "lobby"
+            }
+        };
+
+        const lobbyAudio = document.getElementById('ambient-lobby');
+        const rooftopAudio = document.getElementById('ambient-rooftop');
+        const titleScreen = document.getElementById('title-screen');
+        const gameContainer = document.getElementById('game-container');
+
+        // Load gameState from localStorage if available
+        const saved = localStorage.getItem('hotelSave');
+        if (saved) {
+            gameState = JSON.parse(saved);
+        }
+
+        function saveGameState() {
+            localStorage.setItem('hotelSave', JSON.stringify(gameState));
+        }
+
+        function playAmbient(sceneId) {
+            const scene = scenes[sceneId];
+            const ambientType = scene.ambient || "lobby";
+            lobbyAudio.pause();
+            rooftopAudio.pause();
+
+            if (isAudioInitialized && !isMuted) {
+                if (ambientType === "lobby") {
+                    lobbyAudio.play().catch(e => console.log("Audio play failed:", e));
+                } else if (ambientType === "rooftop") {
+                    rooftopAudio.play().catch(e => console.log("Audio play failed:", e));
+                }
+            }
+        }
+
+        function initializeAudio() {
+            if (!isAudioInitialized) {
+                isAudioInitialized = true;
+                playAmbient('room_203'); // Play initial scene's audio
+            }
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const muteBtn = document.getElementById('mute-btn');
+            muteBtn.textContent = isMuted ? "Unmute" : "Mute";
+            if (isMuted) {
+                lobbyAudio.pause();
+                rooftopAudio.pause();
+            } else if (isAudioInitialized) {
+                const currentSceneId = Object.keys(scenes).find(id => 
+                    document.getElementById('narration').textContent === 
+                    (typeof scenes[id].text === 'function' ? scenes[id].text() : scenes[id].text)
+                );
+                if (currentSceneId) playAmbient(currentSceneId);
+            }
+        }
+
+        function showScene(id) {
+            const scene = scenes[id];
+            if (!scene) {
+                console.error(`Scene ${id} not found.`);
+                return;
+            }
+
+            // Update narration
+            const narration = document.getElementById('narration');
+            narration.classList.remove('visible');
+            setTimeout(() => {
+                narration.textContent = typeof scene.text === 'function' ? scene.text() : scene.text;
+                narration.classList.add('visible');
+                narration.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 50);
+
+            // Update choices
+            const choicesContainer = document.getElementById('choices');
+            choicesContainer.innerHTML = ''; // Clear previous choices
+            if (scene.ending) {
+                // Disable all buttons for ending scenes
+                const buttons = document.querySelectorAll('.choice-btn');
+                buttons.forEach(button => button.disabled = true);
+            } else {
+                scene.choices.forEach((choice, index) => {
+                    // Check if choice requirements are met
+                    let requirementsMet = true;
+                    if (choice.requires) {
+                        requirementsMet = Object.keys(choice.requires).every(
+                            key => gameState[key] === choice.requires[key]
+                        );
+                    }
+
+                    if (requirementsMet) {
+                        const button = document.createElement('button');
+                        button.className = 'choice-btn';
+                        button.textContent = choice.text;
+                        button.addEventListener('click', () => {
+                            initializeAudio(); // Initialize audio on first interaction
+                            // Apply state changes if any
+                            if (choice.set) {
+                                Object.assign(gameState, choice.set);
+                                saveGameState(); // Save state after changes
+                            }
+                            showScene(choice.nextScene);
+                        });
+                        choicesContainer.appendChild(button);
+                        // Trigger fade-in for buttons
+                        setTimeout(() => {
+                            button.classList.add('visible');
+                        }, 100 * (index + 1));
+                    }
+                });
+            }
+
+            // Play ambient sound if audio is initialized
+            playAmbient(id);
+        }
+
+        function startGame() {
+            titleScreen.style.display = 'none';
+            gameContainer.style.display = 'flex';
+            showScene('room_203');
+            initializeAudio(); // Initialize audio when game starts
+        }
+
+        function showTitleScreen() {
+            gameContainer.style.display = 'none';
+            titleScreen.style.display = 'flex';
+            lobbyAudio.pause();
+            rooftopAudio.pause();
+            isAudioInitialized = false; // Reset audio initialization
+        }
+
+        function restartGame() {
+            gameState = { ...initialState }; // Reset to initial state
+            localStorage.removeItem('hotelSave'); // Clear saved state
+            showTitleScreen(); // Show title screen instead of starting game
+        }
+
+        function showCredits() {
+            alert("Credits:\n- Story and Design: xAI Team\n- Development: Grok\n- Audio: Pixabay\nThank you for playing The Hotel!");
+        }
+
+        // Add event listeners
+        document.getElementById('start-btn').addEventListener('click', startGame);
+        document.getElementById('credits-btn').addEventListener('click', showCredits);
+        document.getElementById('restart-btn').addEventListener('click', restartGame);
+        document.getElementById('mute-btn').addEventListener('click', toggleMute);
+
+        // Start with title screen
+        showTitleScreen();
+    </script>
+</body>
+</html>
